@@ -163,6 +163,14 @@ body{font-family:'Inter',sans-serif;background:#0B1020;color:#f0f0f5;display:fle
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Social Studio
       </div>
+      <div class="nav-item" onclick="showPage('traderad')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/></svg>
+        Trader Ad
+      </div>
+      <div class="nav-item" onclick="showPage('traderad')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Trader Ad
+      </div>
     </div>
 
     <div class="sidebar-footer">
@@ -205,6 +213,18 @@ body{font-family:'Inter',sans-serif;background:#0B1020;color:#f0f0f5;display:fle
           <div class="tool-desc">Generate X and Instagram captions from images or text using AI.</div>
           <div class="tool-tag" style="background:rgba(207,232,243,0.08);color:#CFE8F3;">AI Powered</div>
         </div>
+        <div class="tool-card" onclick="showPage('traderad')">
+          <div class="tool-icon" style="background:rgba(207,232,243,0.08);">⭐</div>
+          <div class="tool-name">Trader Ad</div>
+          <div class="tool-desc">Single trader promo poster with discount code and performance stats.</div>
+          <div class="tool-tag" style="background:rgba(207,232,243,0.06);color:#CFE8F3;">Promo · Discount</div>
+        </div>
+        <div class="tool-card" onclick="showPage('traderad')">
+          <div class="tool-icon" style="background:rgba(91,77,255,0.08);">🎯</div>
+          <div class="tool-name">Trader Ad</div>
+          <div class="tool-desc">Dark luxury discount poster for each trader. Code, performance, branding.</div>
+          <div class="tool-tag" style="background:rgba(91,77,255,0.08);color:#9B8FFF;">20 Traders</div>
+        </div>
       </div>
     </div>
 
@@ -223,6 +243,16 @@ body{font-family:'Inter',sans-serif;background:#0B1020;color:#f0f0f5;display:fle
       <iframe class="tool-frame" src="social_studio.html" id="frame-studio"></iframe>
     </div>
 
+    <!-- TRADER AD -->
+    <div class="page" id="page-traderad">
+      <iframe class="tool-frame" src="bottomup_trader_ad_LOCKED.html" id="frame-traderad"></iframe>
+    </div>
+
+    <!-- TRADER AD -->
+    <div class="page" id="page-traderad">
+      <iframe class="tool-frame" src="bottomup_trader_ad_LOCKED.html" id="frame-traderad"></iframe>
+    </div>
+
   </div>
 </div>
 
@@ -232,6 +262,7 @@ const pages = {
   duel: { title: 'The Duel', sub: 'Head-to-head trader poster' },
   leaderboard: { title: 'Leaderboard', sub: 'Weekly trader rankings' },
   studio: { title: 'Social Studio', sub: 'AI-powered caption generator' },
+  traderad: { title: 'Trader Ad', sub: 'Discount poster for verified traders' },
 };
 
 function showPage(id) {

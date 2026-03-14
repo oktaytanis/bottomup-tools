@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Studio — İçerik Üretici</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #18181f;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f5;
+    --text2: #9090a8;
+    --text3: #55556a;
+    --accent: #7c6dfa;
+    --accent2: #a594fb;
+    --x-color: #e8e8f0;
+    --ig-color: #fa7c6d;
+    --ig2: #fda594;
+    --success: #6dfaa0;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.5;transform:scale(1.3);}
+  }
+  .header-badges {
+    display: flex;
+    gap: 8px;
+  }
+  .hbadge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  /* Main layout */
+  main {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* Left sidebar */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--bg2);
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* Drop zone */
+  .drop-zone {
+    border: 1.5px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg3);
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(124,109,250,0.06);
+  }
+  .dz-icon {
+    width: 36px; height: 36px;
+    margin: 0 auto 8px;
+    border-radius: 8px;
+    background: rgba(124,109,250,0.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dz-icon svg { width: 18px; height: 18px; stroke: var(--accent2); }
+  .dz-label { font-size: 13px; color: var(--text2); }
+  .dz-sub { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .preview-wrap { position: relative; }
+  .preview-img {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    max-height: 150px;
+    object-fit: cover;
+    border: 1px solid var(--border2);
+    display: none;
+  }
+  .remove-img {
+    font-size: 11px;
+    color: var(--text3);
+    cursor: pointer;
+    text-align: right;
+    margin-top: 6px;
+    transition: color 0.15s;
+    display: none;
+  }
+  .remove-img:hover { color: #fa6d6d; }
+
+  /* Textarea */
+  textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 10px 12px;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+    transition: border-color 0.15s;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  textarea::placeholder { color: var(--text3); }
+  .char-hint { font-size: 11px; color: var(--text3); text-align: right; margin-top: 4px; font-family: var(--mono); }
+
+  /* Select */
+  select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 9px 12px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%2355556a' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  /* Generate button */
+  .btn-generate {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: -0.2px;
+  }
+  .btn-generate:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-generate:active { transform: translateY(0); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .divider { height: 1px; background: var(--border); }
+
+  /* Right content */
+  .content-area {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+
+  /* Platform section */
+  .platform-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .platform-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .platform-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .platform-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .platform-icon.x { background: rgba(232,232,240,0.08); }
+  .platform-icon.ig { background: rgba(250,124,109,0.1); color: var(--ig-color); }
+
+  /* Format tabs */
+  .format-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fmt-tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    background: transparent;
+    font-family: var(--font);
+    transition: all 0.15s;
+  }
+  .fmt-tab:hover { border-color: var(--accent); color: var(--accent2); }
+  .fmt-tab.active.x-tab { background: rgba(232,232,240,0.08); border-color: rgba(232,232,240,0.2); color: var(--x-color); }
+  .fmt-tab.active.ig-tab { background: rgba(250,124,109,0.1); border-color: rgba(250,124,109,0.3); color: var(--ig-color); }
+  .fmt-dim { font-size: 10px; opacity: 0.6; margin-left: 4px; font-family: var(--mono); }
+
+  /* Output */
+  .output-area { padding: 18px; }
+  .output-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    min-height: 100px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    font-family: var(--font);
+    transition: border-color 0.2s;
+  }
+  .output-box.loading {
+    color: var(--text3);
+    font-style: italic;
+    animation: blink 1.4s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+  .output-box.has-content { border-color: var(--border2); }
+  .output-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .out-count { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+  .btn-copy {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-size: 12px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-copy:hover { border-color: var(--success); color: var(--success); }
+  .btn-copy.copied { border-color: var(--success); color: var(--success); }
+
+  /* Canva size badge */
+  .canva-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    margin-top: 8px;
+  }
+  .canva-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent2); }
+
+  /* Tip box */
+  .tip-box {
+    background: rgba(124,109,250,0.05);
+    border: 1px solid rgba(124,109,250,0.12);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; }
+    .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Social Studio
+  </div>
+  <div class="header-badges">
+    <span class="hbadge">X / Twitter</span>
+    <span class="hbadge">Instagram</span>
+  </div>
+</header>
+
+<main>
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-section-label">Görsel</div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+        <div class="dz-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="3"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21,15 16,10 5,21"/>
+          </svg>
+        </div>
+        <div class="dz-label">Tıkla veya sürükle</div>
+        <div class="dz-sub">PNG · JPG · WEBP</div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
+      <div class="preview-wrap" style="margin-top:10px;">
+        <img id="previewImg" class="preview-img">
+        <div class="remove-img" id="removeBtn" onclick="removeImage()">Görseli kaldır ×</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="sidebar-section-label">API Anahtarı</div>
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:9px 12px;">
+      <div style="font-size:11px;color:var(--text3);margin-top:4px;">console.anthropic.com → API Keys</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="sidebar-section-label">İçerik bilgisi</div>
+      <textarea id="userInput" placeholder="Ürün adı, kampanya detayı, hedef kitle, slogan...&#10;&#10;Ne hakkında içerik üretilsin?"></textarea>
+      <div class="char-hint" id="inputCount">0 karakter</div>
+    </div>
+
+    <div>
+      <div class="sidebar-section-label">Ton</div>
+      <select id="tone">
+        <option>Profesyonel</option>
+        <option>Samimi</option>
+        <option>Eğlenceli</option>
+        <option>Haber tarzı</option>
+        <option>Ilham verici</option>
+      </select>
+    </div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generateAll()">
+      İçerik oluştur →
+    </button>
+
+    <div class="tip-box">
+      Görsel yükle ve/veya metin gir, format seç, içerik oluştur. Her platform için ayrı kopyalayabilirsin.
+    </div>
+  </aside>
+
+  <div class="content-area">
+
+    <!-- X / Twitter -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-name">
+          <div class="platform-icon x">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </div>
+          X / Twitter
+        </div>
+      </div>
+      <div class="format-tabs" id="xFormats">
+        <button class="fmt-tab x-tab active" onclick="selectFormat('x','tweet',this)">Tweet <span class="fmt-dim">280</span></button>
+        <button class="fmt-tab x-tab" onclick="selectFormat('x','thread',this)">Thread</button>
+        <button class="fmt-tab x-tab" onclick="selectFormat('x','long',this)">Long post <span class="fmt-dim">2500</span></button>
+      </div>
+      <div class="output-area">
+        <div class="output-box" id="xOutput">İçerik burada görünecek...</div>
+        <div class="output-footer">
+          <span class="out-count" id="xCount"></span>
+          <button class="btn-copy" onclick="copyText('xOutput',this)">Kopyala</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instagram -->
+    <div class="platform-card">
+      <div class="platform-header">
+        <div class="platform-name">
+          <div class="platform-icon ig">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </div>
+          Instagram
+        </div>
+      </div>
+      <div class="format-tabs" id="igFormats">
+        <button class="fmt-tab ig-tab active" onclick="selectFormat('ig','post',this)">Post <span class="fmt-dim">1080×1080</span></button>
+        <button class="fmt-tab ig-tab" onclick="selectFormat('ig','story',this)">Story <span class="fmt-dim">1080×1920</span></button>
+        <button class="fmt-tab ig-tab" onclick="selectFormat('ig','reel',this)">Reels <span class="fmt-dim">1080×1920</span></button>
+      </div>
+      <div class="output-area">
+        <div class="output-box" id="igOutput">İçerik burada görünecek...</div>
+        <div id="igCanva" style="display:none">
+          <div class="canva-badge"><div class="canva-dot"></div><span id="igDim">1080×1080 px</span></div>
+        </div>
+        <div class="output-footer">
+          <span class="out-count" id="igCount"></span>
+          <button class="btn-copy" onclick="copyText('igOutput',this)">Kopyala</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  let xFormat = 'tweet';
+  let igFormat = 'post';
+  let uploadedImageBase64 = null;
+  let uploadedImageType = null;
+
+  const igDims = { post: '1080×1080 px', story: '1080×1920 px', reel: '1080×1920 px' };
+
+  document.getElementById('userInput').addEventListener('input', function() {
+    document.getElementById('inputCount').textContent = this.value.length + ' karakter';
+  });
+
+  function selectFormat(platform, fmt, el) {
+    if (platform === 'x') {
+      xFormat = fmt;
+      document.querySelectorAll('#xFormats .fmt-tab').forEach(c => c.classList.remove('active'));
+    } else {
+      igFormat = fmt;
+      document.querySelectorAll('#igFormats .fmt-tab').forEach(c => c.classList.remove('active'));
+      document.getElementById('igDim').textContent = igDims[fmt];
+    }
+    el.classList.add('active');
+  }
+
+  function handleDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('dragover'); }
+  function handleDragLeave() { document.getElementById('dropZone').classList.remove('dragover'); }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadImage(file);
+  }
+  function handleFile(e) { const file = e.target.files[0]; if (file) loadImage(file); }
+
+  function loadImage(file) {
+    uploadedImageType = file.type;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedImageBase64 = e.target.result.split(',')[1];
+      document.getElementById('previewImg').src = e.target.result;
+      document.getElementById('previewImg').style.display = 'block';
+      document.getElementById('removeBtn').style.display = 'block';
+      document.getElementById('dropZone').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage() {
+    uploadedImageBase64 = null; uploadedImageType = null;
+    document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('removeBtn').style.display = 'none';
+    document.getElementById('dropZone').style.display = 'block';
+    document.getElementById('fileInput').value = '';
+  }
+
+  async function generateAll() {
+    const input = document.getElementById('userInput').value.trim();
+    if (!input && !uploadedImageBase64) { alert('Lütfen görsel yükleyin veya metin girin.'); return; }
+    const tone = document.getElementById('tone').value;
+    const btn = document.getElementById('generateBtn');
+    btn.textContent = 'Oluşturuluyor...';
+    btn.disabled = true;
+
+    ['xOutput','igOutput'].forEach(id => {
+      const el = document.getElementById(id);
+      el.className = 'output-box loading';
+      el.textContent = 'Yazıyor...';
+    });
+
+    await Promise.all([
+      callClaude(buildMessages('x', xFormat, input, tone), 'xOutput', 'xCount'),
+      callClaude(buildMessages('ig', igFormat, input, tone), 'igOutput', 'igCount')
+    ]);
+
+    document.getElementById('igCanva').style.display = 'block';
+    btn.textContent = 'İçerik oluştur →';
+    btn.disabled = false;
+  }
+
+  function buildPromptText(platform, format, data, tone) {
+    const toneMap = { 'Profesyonel':'professional and authoritative','Samimi':'warm and friendly','Eğlenceli':'fun and energetic','Haber tarzı':'news-style, factual','Ilham verici':'inspiring and motivational' };
+    const t = toneMap[tone] || 'professional';
+    const dataStr = data ? `Additional info: "${data}". ` : '';
+    const imgNote = uploadedImageBase64 ? 'Based on the uploaded image' + (data ? ' and the additional info' : '') + ': ' : '';
+
+    if (platform === 'x') {
+      if (format === 'tweet') return `${imgNote}${dataStr}Write a single engaging tweet in Turkish. Tone: ${t}. Max 280 characters. Add relevant hashtags. Return only the tweet.`;
+      if (format === 'thread') return `${imgNote}${dataStr}Write a Twitter/X thread in Turkish (3-5 tweets, numbered 1/, 2/, 3/...). Tone: ${t}. Each tweet max 280 chars. Return only the thread.`;
+      if (format === 'long') return `${imgNote}${dataStr}Write a long-form X post in Turkish. Tone: ${t}. Max 2500 chars with line breaks. Return only the post.`;
+    } else {
+      if (format === 'post') return `${imgNote}${dataStr}Write an Instagram post caption in Turkish. Tone: ${t}. Include emojis, line breaks, 10-15 hashtags. Return only the caption.`;
+      if (format === 'story') return `${imgNote}${dataStr}Write short Instagram Story text in Turkish. Tone: ${t}. Very brief (2-3 lines), punchy, 1-2 emojis. Return only the text.`;
+      if (format === 'reel') return `${imgNote}${dataStr}Write an Instagram Reels hook + caption in Turkish. Tone: ${t}. Strong hook first line, then caption with emojis and hashtags. Return only the text.`;
+    }
+  }
+
+  function buildMessages(platform, format, input, tone) {
+    const promptText = buildPromptText(platform, format, input, tone);
+    if (uploadedImageBase64) {
+      return [{ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: uploadedImageType, data: uploadedImageBase64 } },
+        { type: 'text', text: promptText }
+      ]}];
+    }
+    return [{ role: 'user', content: promptText }];
+  }
+
+  async function callClaude(messages, outputId, countId) {
+    try {
+      const API_KEY = document.getElementById('apiKeyInput').value.trim();
+      if (!API_KEY) { alert('Lütfen API anahtarını girin!'); return; }
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages })
+      });
+      const data = await res.json();
+      const text = data.content.map(i => i.text || '').join('');
+      const el = document.getElementById(outputId);
+      el.className = 'output-box has-content';
+      el.textContent = text;
+      document.getElementById(countId).textContent = text.length + ' karakter';
+    } catch (e) {
+      document.getElementById(outputId).className = 'output-box';
+      document.getElementById(outputId).textContent = 'Hata oluştu, tekrar deneyin.';
+    }
+  }
+
+  function copyText(id, btn) {
+    const text = document.getElementById(id).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Kopyalandı!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Kopyala'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
